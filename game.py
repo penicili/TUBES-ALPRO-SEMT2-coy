@@ -6,6 +6,12 @@ pygame.init()
 
 # Membuat window
 screen = pygame.display.set_mode((800,450))
+pygame.display.set_caption('Jumper')
+# Membuat objek clock untuk mengatur framerate
+clock = pygame.time.Clock()
+
+# Test
+testSurface = pygame.Surface((100,200))
 
 # game loop
 while True:
@@ -18,3 +24,5 @@ while True:
             
     # Me-refresh tampilan pada window
     pygame.display.update()
+    # Mengatur framerate 60 fps
+    clock.tick(60)
