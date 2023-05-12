@@ -24,9 +24,9 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="2.1367164"
-     inkscape:cx="376.5123"
-     inkscape:cy="564.41744"
+     inkscape:zoom="1.0683582"
+     inkscape:cx="289.69684"
+     inkscape:cy="187.20313"
      inkscape:window-width="1920"
      inkscape:window-height="1046"
      inkscape:window-x="-11"
@@ -88,9 +88,12 @@
        style="fill:#00ffff;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-dasharray:none;stroke-opacity:1"
        id="rect1428"
        width="211.66667"
-       height="79.375"
+       height="92.604164"
        x="1.7511772"
-       y="14.359666" />
+       y="14.359666"
+       inkscape:export-filename="sky_placeholder.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
     <g
        id="g1659">
       <circle
@@ -262,13 +265,6 @@
          d="m 129.56048,45.162755 c 0,0 -1.45112,-1.98032 -2.97027,1.359409"
          id="path1865" />
     </g>
-    <rect
-       style="fill:#00ffff;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-dasharray:none;stroke-opacity:1"
-       id="rect1869"
-       width="211.66667"
-       height="79.375"
-       x="1.7511772"
-       y="14.359666" />
     <g
        id="g1885">
       <circle
