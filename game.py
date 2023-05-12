@@ -11,7 +11,7 @@ pygame.display.set_caption('Jumper')
 clock = pygame.time.Clock()
 
 # Test
-testSurface = pygame.Surface((100,200))
+skySurface = pygame.image.load('Graphics_placeholder\sky_placeholder.png')
 
 # game loop
 while True:
@@ -21,7 +21,9 @@ while True:
             # Menutup / menghancurkan window
             pygame.quit()
             exit()
-            
+    
+    # Menempatkan surface pada display
+    screen.blit(skySurface,(0,0))
     # Me-refresh tampilan pada window
     pygame.display.update()
     # Mengatur framerate 60 fps
