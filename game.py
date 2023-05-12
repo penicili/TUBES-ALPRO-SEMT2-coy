@@ -1,1 +1,3 @@
-text = 'Hello world'
+import pygame
+
+pygame.init()
