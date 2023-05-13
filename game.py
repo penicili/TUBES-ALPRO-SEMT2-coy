@@ -5,7 +5,7 @@ from sys import exit
 pygame.init()
 
 # Membuat window
-screen = pygame.display.set_mode((800,450))
+screen = pygame.display.set_mode((800,400))
 pygame.display.set_caption('Jumper')
 # Membuat objek clock untuk mengatur framerate
 clock = pygame.time.Clock()
@@ -19,6 +19,10 @@ testTextSurf = testText.render('My game', False, 'red').convert()
     # Obstacle
 obstacleSurface = pygame.image.load('Graphics_placeholder/obstacle_placeholder.png').convert_alpha()
 obstacleXpos = 600
+    # Player
+playerSurface = pygame.image.load()
+
+
 
 # game loop
 while True:
@@ -31,14 +35,14 @@ while True:
     
     # Menempatkan surface pada display
     screen.blit(skySurface,(0,0))
-    screen.blit(groundSuface,(0,350))
+    screen.blit(groundSuface,(0,300))
     screen.blit(testTextSurf,(300,50))
     # Membuat animasi untuk obstacle
     if obstacleXpos > -30:
         obstacleXpos -= 4
     else:
         obstacleXpos = 800
-    screen.blit(obstacleSurface,(obstacleXpos,300))
+    screen.blit(obstacleSurface,(obstacleXpos,250))
 
     # Me-refresh tampilan pada window
     pygame.display.update()
