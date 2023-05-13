@@ -10,17 +10,17 @@ pygame.display.set_caption('Jumper')
 # Membuat objek clock untuk mengatur framerate
 clock = pygame.time.Clock()
 # Membuat Font
-testText = pygame.font.Font('Graphics_placeholder/pixeltype/Pixeltype.ttf', 50)
+testText = pygame.font.Font('font/Pixeltype.ttf', 50)
 
 # Menambahkan surface (membuat gambar)
-skySurface = pygame.image.load('Graphics_placeholder/sky_placeholder.png').convert()
-groundSuface = pygame.image.load('Graphics_placeholder/ground_placeholder.png').convert()
+skySurface = pygame.image.load('graphics/Sky.png').convert()
+groundSuface = pygame.image.load('graphics/ground.png').convert()
 testTextSurf = testText.render('My game', False, 'red').convert()
     # Obstacle
-obstacleSurface = pygame.image.load('Graphics_placeholder/obstacle_placeholder.png').convert_alpha()
+obstacleSurface = pygame.image.load('graphics/snail/snail1.png').convert_alpha()
 obstacleXpos = 600
     # Player
-playerSurface = pygame.image.load()
+playerSurface = pygame.image.load('graphics/Player/player_stand.png')
 
 
 
