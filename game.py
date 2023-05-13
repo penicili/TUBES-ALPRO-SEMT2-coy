@@ -16,12 +16,14 @@ testText = pygame.font.Font('font/Pixeltype.ttf', 50)
 skySurface = pygame.image.load('graphics/Sky.png').convert()
 groundSuface = pygame.image.load('graphics/ground.png').convert()
 testTextSurf = testText.render('My game', False, 'red').convert()
-    # Obstacle
+    # Obstacle surface dan hitbox
 obstacleSurface = pygame.image.load('graphics/snail/snail1.png').convert_alpha()
-obstacleXpos = 600
-    # Player
-playerSurface = pygame.image.load('graphics/Player/player_stand.png')
+obstacleRect = obstacleSurface.get_rect(midbottom=(800,300))
 
+
+    # Surface player dan hitboxnya
+playerSurface = pygame.image.load('graphics/Player/player_stand.png').convert_alpha()
+playerRect = playerSurface.get_rect(midbottom=(80,300))
 
 
 # game loop
@@ -37,12 +39,15 @@ while True:
     screen.blit(skySurface,(0,0))
     screen.blit(groundSuface,(0,300))
     screen.blit(testTextSurf,(300,50))
-    # Membuat animasi untuk obstacle
-    if obstacleXpos > -30:
-        obstacleXpos -= 4
-    else:
-        obstacleXpos = 800
-    screen.blit(obstacleSurface,(obstacleXpos,250))
+    obstacleRect.x -= 4
+    if obstacleRect.right <= 0: obstacleRect.left = 800
+    screen.blit(playerSurface,playerRect)
+    screen.blit(obstacleSurface,obstacleRect)
+
+    # Mengecek collision hitbox (rect)
+    if playerRect.colliderect(obstacleRect):
+        print ('collision')
+
 
     # Me-refresh tampilan pada window
     pygame.display.update()
