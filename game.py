@@ -10,12 +10,14 @@ pygame.display.set_caption('Jumper')
 # Membuat objek clock untuk mengatur framerate
 clock = pygame.time.Clock()
 # Membuat Font
-testText = pygame.font.Font('font/Pixeltype.ttf', 50)
+gameFont = pygame.font.Font('font/Pixeltype.ttf', 50)
 
 # Menambahkan surface (membuat gambar)
 skySurface = pygame.image.load('graphics/Sky.png').convert()
 groundSuface = pygame.image.load('graphics/ground.png').convert()
-testTextSurf = testText.render('My game', False, 'red').convert()
+    # Teks
+scoreSurf = gameFont.render('My game', False, 'brown').convert()
+scoreRect = scoreSurf.get_rect(center=(400,50))
     # Obstacle surface dan hitbox
 obstacleSurface = pygame.image.load('graphics/snail/snail1.png').convert_alpha()
 obstacleRect = obstacleSurface.get_rect(midbottom=(800,300))
@@ -34,19 +36,26 @@ while True:
             # Menutup / menghancurkan window
             pygame.quit()
             exit()
+        # if event.type == pygame.MOUSEMOTION:
+        #     if playerRect.collidepoint((event.pos)): print('collision')
+                
     
     # Menempatkan surface pada display
     screen.blit(skySurface,(0,0))
     screen.blit(groundSuface,(0,300))
-    screen.blit(testTextSurf,(300,50))
+    pygame.draw.rect(screen, 'Pink', scoreRect)
+    pygame.draw.rect(screen, 'Pink', scoreRect,10)
+    screen.blit(scoreSurf,scoreRect)
     obstacleRect.x -= 4
     if obstacleRect.right <= 0: obstacleRect.left = 800
     screen.blit(playerSurface,playerRect)
     screen.blit(obstacleSurface,obstacleRect)
 
     # Mengecek collision hitbox (rect)
-    if playerRect.colliderect(obstacleRect):
-        print ('collision')
+    # if playerRect.colliderect(obstacleRect):
+    #     print ('collision')
+    
+    
 
 
     # Me-refresh tampilan pada window
