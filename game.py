@@ -16,7 +16,7 @@ gameFont = pygame.font.Font('font/Pixeltype.ttf', 50)
 skySurface = pygame.image.load('graphics/Sky.png').convert()
 groundSuface = pygame.image.load('graphics/ground.png').convert()
     # Teks
-scoreSurf = gameFont.render('My game', False, 'brown').convert()
+scoreSurf = gameFont.render('My game', False, (64,64,64)).convert()
 scoreRect = scoreSurf.get_rect(center=(400,50))
     # Obstacle surface dan hitbox
 obstacleSurface = pygame.image.load('graphics/snail/snail1.png').convert_alpha()
@@ -27,6 +27,8 @@ obstacleRect = obstacleSurface.get_rect(midbottom=(800,300))
 playerSurface = pygame.image.load('graphics/Player/player_stand.png').convert_alpha()
 playerRect = playerSurface.get_rect(midbottom=(80,300))
 
+    # Gravitasi
+playerGravity = 0
 
 # game loop
 while True:
@@ -36,6 +38,9 @@ while True:
             # Menutup / menghancurkan window
             pygame.quit()
             exit()
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE: 
+                playerGravity = -20
         # if event.type == pygame.MOUSEMOTION:
         #     if playerRect.collidepoint((event.pos)): print('collision')
                 
@@ -43,13 +48,20 @@ while True:
     # Menempatkan surface pada display
     screen.blit(skySurface,(0,0))
     screen.blit(groundSuface,(0,300))
-    pygame.draw.rect(screen, 'Pink', scoreRect)
-    pygame.draw.rect(screen, 'Pink', scoreRect,10)
+    pygame.draw.rect(screen, '#c0e8ec', scoreRect)
+    pygame.draw.rect(screen, '#c0e8ec', scoreRect,10)
     screen.blit(scoreSurf,scoreRect)
+        # Obstacle
     obstacleRect.x -= 4
     if obstacleRect.right <= 0: obstacleRect.left = 800
-    screen.blit(playerSurface,playerRect)
     screen.blit(obstacleSurface,obstacleRect)
+
+        # Player
+    playerGravity += 1
+    playerRect.y += playerGravity
+    screen.blit(playerSurface,playerRect)
+
+
 
     # Mengecek collision hitbox (rect)
     # if playerRect.colliderect(obstacleRect):
