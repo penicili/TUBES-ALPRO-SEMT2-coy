@@ -39,10 +39,11 @@ while True:
             pygame.quit()
             exit()
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE: 
+            if event.key == pygame.K_SPACE and playerRect.bottom >= 300: 
                 playerGravity = -20
-        # if event.type == pygame.MOUSEMOTION:
-        #     if playerRect.collidepoint((event.pos)): print('collision')
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if playerRect.collidepoint((event.pos)) and playerRect.bottom >= 300:
+                playerGravity = -20
                 
     
     # Menempatkan surface pada display
@@ -52,23 +53,20 @@ while True:
     pygame.draw.rect(screen, '#c0e8ec', scoreRect,10)
     screen.blit(scoreSurf,scoreRect)
         # Obstacle
-    obstacleRect.x -= 4
+    obstacleRect.x -= 8
     if obstacleRect.right <= 0: obstacleRect.left = 800
     screen.blit(obstacleSurface,obstacleRect)
 
         # Player
     playerGravity += 1
     playerRect.y += playerGravity
+    if playerRect.bottom > 300: playerRect.bottom = 300
     screen.blit(playerSurface,playerRect)
 
-
-
-    # Mengecek collision hitbox (rect)
-    # if playerRect.colliderect(obstacleRect):
-    #     print ('collision')
-    
-    
-
+    # Game over
+    if obstacleRect.colliderect(playerRect):
+        pygame.quit()
+        exit()
 
     # Me-refresh tampilan pada window
     pygame.display.update()
