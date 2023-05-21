@@ -11,6 +11,8 @@ pygame.display.set_caption('Jumper')
 clock = pygame.time.Clock()
 # Membuat Font
 gameFont = pygame.font.Font('font/Pixeltype.ttf', 50)
+# Game over state
+gameActive = True
 
 # Menambahkan surface (membuat gambar)
 skySurface = pygame.image.load('graphics/Sky.png').convert()
@@ -18,6 +20,8 @@ groundSuface = pygame.image.load('graphics/ground.png').convert()
     # Teks
 scoreSurf = gameFont.render('My game', False, (64,64,64)).convert()
 scoreRect = scoreSurf.get_rect(center=(400,50))
+GameOverText = gameFont.render('Game Over', False, (64,64,64)).convert()
+gameOverRect = GameOverText.get_rect(center = (400,200))
     # Obstacle surface dan hitbox
 obstacleSurface = pygame.image.load('graphics/snail/snail1.png').convert_alpha()
 obstacleRect = obstacleSurface.get_rect(midbottom=(800,300))
@@ -38,38 +42,46 @@ while True:
             # Menutup / menghancurkan window
             pygame.quit()
             exit()
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE and playerRect.bottom >= 300: 
-                playerGravity = -20
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if playerRect.collidepoint((event.pos)) and playerRect.bottom >= 300:
-                playerGravity = -20
+        if gameActive:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE and playerRect.bottom >= 300: 
+                    playerGravity = -20
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if playerRect.collidepoint((event.pos)) and playerRect.bottom >= 300:
+                    playerGravity = -20
+        if not gameActive:
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_r:
+                    gameActive = True
+                    obstacleRect.left = 800
+        
                 
-    
-    # Menempatkan surface pada display
-    screen.blit(skySurface,(0,0))
-    screen.blit(groundSuface,(0,300))
-    pygame.draw.rect(screen, '#c0e8ec', scoreRect)
-    pygame.draw.rect(screen, '#c0e8ec', scoreRect,10)
-    screen.blit(scoreSurf,scoreRect)
-        # Obstacle
-    obstacleRect.x -= 8
-    if obstacleRect.right <= 0: obstacleRect.left = 800
-    screen.blit(obstacleSurface,obstacleRect)
+    if gameActive:
+        # Menempatkan surface pada display
+        screen.blit(skySurface,(0,0))
+        screen.blit(groundSuface,(0,300))
+        pygame.draw.rect(screen, '#c0e8ec', scoreRect)
+        pygame.draw.rect(screen, '#c0e8ec', scoreRect,10)
+        screen.blit(scoreSurf,scoreRect)
+            # Obstacle
+        obstacleRect.x -= 8
+        if obstacleRect.right <= 0: obstacleRect.left = 800
+        screen.blit(obstacleSurface,obstacleRect)
 
-        # Player
-    playerGravity += 1
-    playerRect.y += playerGravity
-    if playerRect.bottom > 300: playerRect.bottom = 300
-    screen.blit(playerSurface,playerRect)
+            # Player
+        playerGravity += 1
+        playerRect.y += playerGravity
+        if playerRect.bottom > 300: playerRect.bottom = 300
+        screen.blit(playerSurface,playerRect)
 
-    # Game over
-    if obstacleRect.colliderect(playerRect):
-        pygame.quit()
-        exit()
+        # Game over
+        if obstacleRect.colliderect(playerRect):
+            gameActive = False
+    else:
+        screen.fill('Yellow')
+        screen.blit(GameOverText,gameOverRect)
+
 
     # Me-refresh tampilan pada window
     pygame.display.update()
-
     # Mengatur framerate 60 fps
     clock.tick(60)
