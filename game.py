@@ -1,8 +1,18 @@
 import pygame
 from sys import exit
 
+# Scoreboard
+def displayScore():
+    playTime = int((pygame.time.get_ticks() - startTime)/200)
+    scoreSurf = gameFont.render(f'{playTime}',False,(64,64,64))
+    scoreRect= scoreSurf.get_rect(center= (400,50))
+    screen.blit(scoreSurf,scoreRect)
 # Menginisiasi pygame 
 pygame.init()
+
+# BGM
+pygame.mixer.music.load('audio/bgm.mp3')
+pygame.mixer.music.play()
 
 # Membuat window
 screen = pygame.display.set_mode((800,400))
@@ -13,13 +23,14 @@ clock = pygame.time.Clock()
 gameFont = pygame.font.Font('font/Pixeltype.ttf', 50)
 # Game over state
 gameActive = True
-
+# Waktu utk score
+startTime = 0
 # Menambahkan surface (membuat gambar)
 skySurface = pygame.image.load('graphics/Sky.png').convert()
 groundSuface = pygame.image.load('graphics/ground.png').convert()
     # Teks
-scoreSurf = gameFont.render('My game', False, (64,64,64)).convert()
-scoreRect = scoreSurf.get_rect(center=(400,50))
+# scoreSurf = gameFont.render('My game', False, (64,64,64)).convert()
+# scoreRect = scoreSurf.get_rect(center=(400,50))
 GameOverText = gameFont.render('Game Over', False, (64,64,64)).convert()
 gameOverRect = GameOverText.get_rect(center = (400,200))
     # Obstacle surface dan hitbox
@@ -53,20 +64,21 @@ while True:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_r:
                     gameActive = True
                     obstacleRect.left = 800
+                    startTime = pygame.time.get_ticks()
         
                 
     if gameActive:
         # Menempatkan surface pada display
         screen.blit(skySurface,(0,0))
         screen.blit(groundSuface,(0,300))
-        pygame.draw.rect(screen, '#c0e8ec', scoreRect)
-        pygame.draw.rect(screen, '#c0e8ec', scoreRect,10)
-        screen.blit(scoreSurf,scoreRect)
+        # pygame.draw.rect(screen, '#c0e8ec', scoreRect)
+        # pygame.draw.rect(screen, '#c0e8ec', scoreRect,10)
+        # screen.blit(scoreSurf,scoreRect)
+        displayScore()
             # Obstacle
         obstacleRect.x -= 8
         if obstacleRect.right <= 0: obstacleRect.left = 800
         screen.blit(obstacleSurface,obstacleRect)
-
             # Player
         playerGravity += 1
         playerRect.y += playerGravity
@@ -76,9 +88,12 @@ while True:
         # Game over
         if obstacleRect.colliderect(playerRect):
             gameActive = False
+            pygame.mixer.pause()
     else:
         screen.fill('Yellow')
         screen.blit(GameOverText,gameOverRect)
+
+
 
 
     # Me-refresh tampilan pada window
