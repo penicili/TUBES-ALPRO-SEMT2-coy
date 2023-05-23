@@ -10,6 +10,7 @@ def displayScore():
     screen.blit(scoreSurf,scoreRect)
     return playTime
 
+# Obstacle Movement
 def obstacleMovement(obstacleList):
     if obstacleList:
         for obstacleRect in obstacleList:
@@ -23,12 +24,26 @@ def obstacleMovement(obstacleList):
         return obstacleList
     else: return []
 
+# Collision
 def collisions(player, obsRects):
     if obsRects:
         for obsRect in obsRects:
             if player.colliderect(obsRect):
                 return False
     return True
+
+# Player Animation
+def playerAnimation():
+    global playerSurface, playerIndex
+    if playerRect.bottom < 300:
+        #Lompat ketika di atas
+        playerSurface = playerJump
+    else:
+        #Jalan ketika di ground
+        playerIndex += 0.1
+        if playerIndex >= len(playerWalk): playerIndex = 0
+        playerSurface = playerWalk[int(playerIndex)]
+
 # Menginisiasi pygame 
 pygame.init()
 
@@ -62,7 +77,12 @@ obstacleRectList = []
 
 
     # Surface player dan hitboxnya
-playerSurface = pygame.image.load('graphics/Player/player_stand.png').convert_alpha()
+playerWalk1 = pygame.image.load('graphics/Player/player_walk_1.png').convert_alpha()
+playerWalk2 = pygame.image.load('graphics/Player/player_walk_2.png').convert_alpha()
+playerWalk = [playerWalk1,playerWalk2]
+playerIndex = 0
+playerJump = pygame.image.load('graphics/Player/jump.png').convert_alpha()
+playerSurface = playerWalk[playerIndex]
 playerRect = playerSurface.get_rect(midbottom=(80,300))
     # Gravitasi
 playerGravity = 0
@@ -115,6 +135,7 @@ while True:
         playerGravity += 1
         playerRect.y += playerGravity
         if playerRect.bottom > 300: playerRect.bottom = 300
+        playerAnimation()
         screen.blit(playerSurface,playerRect)
 
         # Game over
