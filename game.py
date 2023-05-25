@@ -18,10 +18,14 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(midbottom = (80,300))
         self.gravity = 0
 
+        self.jumpSound = pygame.mixer.Sound('audio/jump.mp3')
+        self.jumpSound.set_volume(0.5)
+
     def playerInput(self):
         keys =pygame.key.get_pressed()
         if keys[pygame.K_SPACE] and self.rect.bottom >= 300:
             self.gravity = -20
+            self.jumpSound.play()
 
     def applyGravity(self):
         self.gravity += 1 
@@ -108,7 +112,10 @@ def collisions(player, obsRects):
     return True
 
 def collisionSprite():
-    pygame.sprite.spritecollide(player.sprite)
+    if pygame.sprite.spritecollide(player.sprite, obstacleGroup, False):
+        obstacleGroup.empty()
+        return False
+    else: return True
 
 
 # Player Animation
@@ -127,23 +134,18 @@ def playerAnimation():
 # Menginisiasi pygame 
 pygame.init()
 
-
     # Membuat window
 screen = pygame.display.set_mode((800,400))
 pygame.display.set_caption('Hell nah dude')
 
-
     # Membuat objek clock untuk mengatur framerate
 clock = pygame.time.Clock()
-
 
     # Membuat Font
 gameFont = pygame.font.Font('font/Pixeltype.ttf', 50)
 
-
     # Game over state
 gameActive = True
-
 
     # Waktu utk score
 startTime = 0
@@ -152,7 +154,7 @@ startTime = 0
 player = pygame.sprite.GroupSingle()
 player.add(Player())
 
-obstacles = pygame.sprite.Group()
+obstacleGroup = pygame.sprite.Group()
     # Menambahkan surface (membuat gambar)
 skySurface = pygame.image.load('graphics/Sky.png').convert()
 groundSuface = pygame.image.load('graphics/ground.png').convert()
@@ -162,6 +164,8 @@ groundSuface = pygame.image.load('graphics/ground.png').convert()
 # scoreSurf = gameFont.render('My game', False, (64,64,64)).convert()
 # scoreRect = scoreSurf.get_rect(center=(400,50))
 score = 0
+bgm = pygame.mixer.Sound('audio/music.wav')
+bgm.play(loops= -1)
 GameOverText = gameFont.render('Game Over', False, (64,64,64)).convert()
 gameOverRect = GameOverText.get_rect(center = (400,50))
 RestartText = gameFont.render('Restart', False, (64,64,64)).convert()
@@ -228,7 +232,7 @@ while True:
                     playerGravity = -20
             if event.type == obstacleTimer:
                 
-                obstacles.add(Obstacle(choice(['fly','snail','snail','snail','snail'])))
+                obstacleGroup.add(Obstacle(choice(['fly','snail','snail','snail','snail'])))
                 # if randint(0,2):
                 #     obstacleRectList.append(snailSurf.get_rect(midbottom=(randint(900,1100),300)))
                 # else:
@@ -275,10 +279,11 @@ while True:
         # screen.blit(playerSurface,playerRect)
         player.draw(screen)
         player.update()
-        obstacles.draw(screen)
-        obstacles.update()
+        obstacleGroup.draw(screen)
+        obstacleGroup.update()
 
         # Game over
+        gameActive = collisionSprite()
         # if obstacleRect1.colliderect(playerRect):
         #     gameActive = False
         # gameActive = collisions(playerRect,obstacleRectList)
@@ -290,7 +295,7 @@ while True:
         gameOverSRect = gameOverScore.get_rect(center=(400,150))
         playerRect.midbottom= (80,300)
         obstacleRectList.clear()
-        playerGravity = 0
+        player.
         screen.fill((108, 198, 240))
         screen.blit(GameOverText,gameOverRect)
         screen.blit(gameOverScore,gameOverSRect)
