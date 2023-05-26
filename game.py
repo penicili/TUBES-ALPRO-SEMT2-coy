@@ -76,6 +76,37 @@ class Obstacle(pygame.sprite.Sprite):
         self.rect.x -= 6
         self.destroy()
 
+class Button():
+    def __init__(self, x, y, image, scale):
+        self.clickSound = pygame.mixer.Sound('audio/8bitClick.mp3')
+        width = image.get_width()
+        height = image.get_height()
+        self.image = pygame.transform.scale(image, (int(width * scale), int(height * scale)))
+        self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
+        self.clicked = False
+
+
+    def draw(self, surface):
+        action = False
+        #get mouse position
+        pos = pygame.mouse.get_pos()
+
+		#check mouseover and clicked conditions
+        if self.rect.collidepoint(pos):
+            if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
+                self.clicked = True
+                action = True
+                self.clickSound.play()
+
+        if pygame.mouse.get_pressed()[0] == 0:
+            self.clicked = False
+
+		#draw button on screen
+        surface.blit(self.image, (self.rect.x, self.rect.y))
+
+        return action
+
 
 # Scoreboard
 def displayScore():
@@ -135,6 +166,24 @@ score = 0
 bgm = pygame.mixer.Sound('audio/music.wav')
 bgm.play(loops= -1)
 
+GameOverText = gameFont.render('Game Over', False, (64,64,64)).convert()
+gameOverRect = GameOverText.get_rect(center = (400,50))
+
+RestartText = gameFont.render('Restart', False, (0,0,0)).convert()
+RestartText = pygame.transform.scale(RestartText, (int(RestartText.get_width())* 1.2, int(RestartText.get_height())* 1.2))
+RestartRect = RestartText.get_rect(center=  (400,253))
+
+
+
+gameOverScore = gameFont.render(f'Score: {score}', False, (64, 64, 64)).convert()
+gameOverSRect = gameOverScore.get_rect(center=(400,150))
+
+buttonimg = pygame.image.load('graphics/buttonimage.png').convert_alpha()
+# buttonimg = pygame.transform.scale(buttonimg, (int (buttonimg.get_width()* 5), int(buttonimg.get_height())* 5))
+# restartButtonRect = buttonimg.get_rect(center = (400, 255))
+restartButton = Button(400, 255, buttonimg, 5)
+
+
 
     # Timers
 obstacleTimer = pygame.USEREVENT + 1
@@ -144,6 +193,7 @@ pygame.time.set_timer(obstacleTimer, 1400)
 while True:
 # Event loop
     for event in pygame.event.get():
+
         if event.type == pygame.QUIT:
             # Close
             pygame.quit()
@@ -158,10 +208,6 @@ while True:
                     gameActive = True
                     startTime = pygame.time.get_ticks()
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1 and restartRect.collidepoint(event.pos):
-                    gameActive = True
-                    startTime = pygame.time.get_ticks()
         
 
 # Game running State          
@@ -183,23 +229,13 @@ while True:
 
 # Game over State
     else:
-        GameOverText = gameFont.render('Game Over', False, (64,64,64)).convert()
-        gameOverRect = GameOverText.get_rect(center = (400,50))
-
-        RestartText = gameFont.render('Restart', False, (64,64,64)).convert()
-        RestartRect = RestartText.get_rect(center=  (400,225))
-
-        restartButton = pygame.image.load('Graphics_placeholder/button_pixelated.png').convert_alpha()
-        restartButton = pygame.transform.scale(restartButton, (int(restartButton.get_width() * 0.5), int(restartButton.get_height() * 0.5)))
-        restartRect = restartButton.get_rect(center= (400,225))
-        gameOverScore = gameFont.render(f'Score: {score}', False, (64, 64, 64)).convert()
-        gameOverSRect = gameOverScore.get_rect(center=(400,150))
         screen.fill((108, 198, 240))
         screen.blit(GameOverText,gameOverRect)
         screen.blit(gameOverScore,gameOverSRect)
-        screen.blit(restartButton,restartRect)
+        if restartButton.draw(screen):
+            gameActive = True
+            startTime = pygame.time.get_ticks()
         screen.blit(RestartText,RestartRect)
-
 
     pygame.display.update()
     clock.tick(60)
