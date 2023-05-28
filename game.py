@@ -160,6 +160,9 @@ obstacleGroup = pygame.sprite.Group()
     # Surfaces
 skySurface = pygame.image.load('graphics/Sky.png').convert()
 groundSuface = pygame.image.load('graphics/ground.png').convert()
+skyWidth = skySurface.get_width()
+
+scroll = 0
 
 score = 0
 
@@ -212,8 +215,13 @@ while True:
 
 # Game running State          
     if gameActive:
-        screen.blit(skySurface,(0,0))
+        for i in range (0, 1):
+            screen.blit(skySurface, ((i * skyWidth + scroll ), 0))
+        # screen.blit(skySurface,(0,0))
         screen.blit(groundSuface,(0,300))
+    # scroll bg
+        scroll -= 5
+
         # Score
         score = displayScore()
         # Player
