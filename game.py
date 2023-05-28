@@ -17,7 +17,7 @@ class Player(pygame.sprite.Sprite):
         self.gravity = 0
 
         self.jumpSound = pygame.mixer.Sound('audio/jump.mp3')
-        self.jumpSound.set_volume(0.5)
+        self.jumpSound.set_volume(0.7)
 
     def playerInput(self):
         keys =pygame.key.get_pressed()
@@ -155,9 +155,9 @@ startTime = 0
     # Groups
 player = pygame.sprite.GroupSingle()
 player.add(Player())
+obstacleGroup = pygame.sprite.Group()
 
     # Surfaces
-obstacleGroup = pygame.sprite.Group()
 skySurface = pygame.image.load('graphics/Sky.png').convert()
 groundSuface = pygame.image.load('graphics/ground.png').convert()
 
