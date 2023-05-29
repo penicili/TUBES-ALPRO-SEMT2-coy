@@ -1,6 +1,7 @@
 import pygame
 from sys import exit
 from random import randint, choice
+import math
 
 
 class Player(pygame.sprite.Sprite):
@@ -162,7 +163,11 @@ skySurface = pygame.image.load('graphics/Sky.png').convert()
 groundSuface = pygame.image.load('graphics/ground.png').convert()
 skyWidth = skySurface.get_width()
 
+bgWidth = skySurface.get_width()
+
+tiles = math.ceil(800/bgWidth)
 scroll = 0
+groundScroll = 0
 
 score = 0
 
@@ -178,8 +183,7 @@ RestartRect = RestartText.get_rect(center=  (400,253))
 
 
 
-gameOverScore = gameFont.render(f'Score: {score}', False, (64, 64, 64)).convert()
-gameOverSRect = gameOverScore.get_rect(center=(400,150))
+
 
 buttonimg = pygame.image.load('graphics/buttonimage.png').convert_alpha()
 # buttonimg = pygame.transform.scale(buttonimg, (int (buttonimg.get_width()* 5), int(buttonimg.get_height())* 5))
@@ -215,12 +219,19 @@ while True:
 
 # Game running State          
     if gameActive:
-        for i in range (0, 1):
+        for i in range (-1, 2):
             screen.blit(skySurface, ((i * skyWidth + scroll ), 0))
-        # screen.blit(skySurface,(0,0))
-        screen.blit(groundSuface,(0,300))
+        for i in range (-1, 2):
+            screen.blit(groundSuface, ((i * skyWidth + groundScroll ), 300))
+        if abs(scroll) > bgWidth:
+            scroll = 0
+        if abs(groundScroll) > bgWidth:
+            groundScroll = 0
+        
+
     # scroll bg
-        scroll -= 5
+        scroll -= 2
+        groundScroll -=6
 
         # Score
         score = displayScore()
@@ -237,6 +248,8 @@ while True:
 
 # Game over State
     else:
+        gameOverScore = gameFont.render(f'Score: {score}', False, (64, 64, 64)).convert()
+        gameOverSRect = gameOverScore.get_rect(center=(400,150))
         screen.fill((108, 198, 240))
         screen.blit(GameOverText,gameOverRect)
         screen.blit(gameOverScore,gameOverSRect)
