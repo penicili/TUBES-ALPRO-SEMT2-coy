@@ -159,15 +159,23 @@ player.add(Player())
 obstacleGroup = pygame.sprite.Group()
 
     # Surfaces
-skySurface = pygame.image.load('graphics/Sky.png').convert()
+skySurface = pygame.image.load('Graphics_City/mountains_cut.png')
+skySurface = pygame.transform.scale(skySurface,(int(skySurface.get_width())*4, int(skySurface.get_height())*4))
 groundSuface = pygame.image.load('graphics/ground.png').convert()
+citySurface = pygame.image.load('Graphics_City\city_cut.png')
+citySurface = pygame.transform.scale(citySurface, (int(citySurface.get_width())*4, int(citySurface.get_height()*4)))
+
 skyWidth = skySurface.get_width()
+bgWidth = groundSuface.get_width()
+cityWidth = citySurface.get_width()
 
-bgWidth = skySurface.get_width()
+tiles = math.ceil(800/skyWidth) + 1
+tilesGround = math.ceil(800/bgWidth) + 1
+tilesCity = math.ceil(800/cityWidth) + 1
 
-tiles = math.ceil(800/bgWidth)
 scroll = 0
 groundScroll = 0
+cityScroll = 0
 
 score = 0
 
@@ -218,21 +226,26 @@ while True:
         
 
 # Game running State          
+    screen.fill((66, 176, 245))
     if gameActive:
+        for i in range (0, tiles):
+            screen.blit(skySurface, ((i * skyWidth + scroll ), 130))
+        for i in range (0, tiles):
+            screen.blit(citySurface,((i* cityWidth + cityScroll), 170))
         for i in range (-1, 2):
-            screen.blit(skySurface, ((i * skyWidth + scroll ), 0))
-        for i in range (-1, 2):
-            screen.blit(groundSuface, ((i * skyWidth + groundScroll ), 300))
-        if abs(scroll) > bgWidth:
+            screen.blit(groundSuface, ((i * bgWidth + groundScroll ), 300))
+        if abs(scroll) > skyWidth:
             scroll = 0
         if abs(groundScroll) > bgWidth:
             groundScroll = 0
+        if abs (cityScroll) >  cityWidth:
+            cityScroll = 0
         
 
     # scroll bg
-        scroll -= 2
-        groundScroll -=6
-
+        scroll -= 1
+        groundScroll -= 6
+        cityScroll -= 4
         # Score
         score = displayScore()
         # Player
