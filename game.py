@@ -159,17 +159,19 @@ player.add(Player())
 obstacleGroup = pygame.sprite.Group()
 
     # Surfaces
-skySurface = pygame.image.load('Graphics_City/mountains_cut.png')
-skySurface = pygame.transform.scale(skySurface,(int(skySurface.get_width())*4, int(skySurface.get_height())*4))
-groundSuface = pygame.image.load('graphics/ground.png').convert()
-citySurface = pygame.image.load('Graphics_City\city_cut.png')
-citySurface = pygame.transform.scale(citySurface, (int(citySurface.get_width())*4, int(citySurface.get_height()*4)))
+skySurface = pygame.image.load('Lv1_Graphics/parallax-mountain-bg.png')
+skySurface = pygame.transform.scale(skySurface, (int(skySurface.get_width())*3, int(skySurface.get_height())*3)).convert_alpha()
+MountainSurface = pygame.image.load('Lv1_Graphics/mountains_cut.png')
+MountainSurface = pygame.transform.scale(MountainSurface,(int(MountainSurface.get_width())*4, int(MountainSurface.get_height())*4)).convert_alpha()
+groundSuface = pygame.image.load('Lv1_Graphics/ground.png').convert()
+citySurface = pygame.image.load('Lv1_Graphics/city_cut.png')
+citySurface = pygame.transform.scale(citySurface, (int(citySurface.get_width())*4, int(citySurface.get_height()*4))).convert_alpha()
 
-skyWidth = skySurface.get_width()
+MountainWidth = MountainSurface.get_width()
 bgWidth = groundSuface.get_width()
 cityWidth = citySurface.get_width()
 
-tiles = math.ceil(800/skyWidth) + 1
+tiles = math.ceil(800/MountainWidth) + 1
 tilesGround = math.ceil(800/bgWidth) + 1
 tilesCity = math.ceil(800/cityWidth) + 1
 
@@ -197,7 +199,7 @@ buttonimg = pygame.image.load('graphics/buttonimage.png').convert_alpha()
 # buttonimg = pygame.transform.scale(buttonimg, (int (buttonimg.get_width()* 5), int(buttonimg.get_height())* 5))
 # restartButtonRect = buttonimg.get_rect(center = (400, 255))
 restartButton = Button(400, 255, buttonimg, 5)
-
+startButton = Button (400, 255, buttonimg, 5)
 
 
     # Timers
@@ -224,17 +226,22 @@ while True:
                     startTime = pygame.time.get_ticks()
 
         
+# Main menu
+    screen.blit(skySurface, (0,0))
+    if startButton:
+        gameActive = True
+
 
 # Game running State          
-    screen.fill((66, 176, 245))
+    screen.blit(skySurface,(0,0))
     if gameActive:
         for i in range (0, tiles):
-            screen.blit(skySurface, ((i * skyWidth + scroll ), 130))
+            screen.blit(MountainSurface, ((i * MountainWidth + scroll ), 130))
         for i in range (0, tiles):
             screen.blit(citySurface,((i* cityWidth + cityScroll), 170))
         for i in range (-1, 2):
             screen.blit(groundSuface, ((i * bgWidth + groundScroll ), 300))
-        if abs(scroll) > skyWidth:
+        if abs(scroll) > MountainWidth:
             scroll = 0
         if abs(groundScroll) > bgWidth:
             groundScroll = 0
