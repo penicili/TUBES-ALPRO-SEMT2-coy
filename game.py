@@ -77,6 +77,36 @@ class Obstacle(pygame.sprite.Sprite):
         self.destroy()
 
 
+class Button():
+    def __init__(self, x, y, image, scale):
+        width = image.get_width()
+        height = image.get_height()
+        self.image = pygame.transform.scale(image, (int(width * scale), int(height * scale)))
+        self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
+        self.clicked = False
+        self.clickSound = pygame.mixer.Sound('audio/click.mp3')
+
+    def draw(self, surface):
+        action = False
+        #get mouse position
+        pos = pygame.mouse.get_pos()
+
+        #check mouseover and clicked conditions
+        if self.rect.collidepoint(pos):
+            if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
+                self.clickSound.play()
+                self.clicked = True
+                action = True
+
+        if pygame.mouse.get_pressed()[0] == 0:
+            self.clicked = False
+
+        #draw button on screen
+        surface.blit(self.image, (self.rect.x, self.rect.y))
+
+        return action
+    
 # Scoreboard
 def displayScore():
     playTime = int((pygame.time.get_ticks() - startTime)/1000)
@@ -140,6 +170,10 @@ bgm.play(loops= -1)
 obstacleTimer = pygame.USEREVENT + 1
 pygame.time.set_timer(obstacleTimer, 1400)
 
+     # Buttons
+buttonImg = pygame.image.load('graphics/Buttoncoy.png').convert_alpha()
+restartButton = Button(400, 225, buttonImg, 2.5)
+
 # Game loop
 while True:
 # Event loop
@@ -158,14 +192,12 @@ while True:
                     gameActive = True
                     startTime = pygame.time.get_ticks()
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1 and restartRect.collidepoint(event.pos):
-                    gameActive = True
-                    startTime = pygame.time.get_ticks()
+
         
 
 # Game running State          
     if gameActive:
+        
         screen.blit(skySurface,(0,0))
         screen.blit(groundSuface,(0,300))
         # Score
@@ -189,16 +221,19 @@ while True:
         RestartText = gameFont.render('Restart', False, (64,64,64)).convert()
         RestartRect = RestartText.get_rect(center=  (400,225))
 
-        restartButton = pygame.image.load('Graphics_placeholder/button_pixelated.png').convert_alpha()
-        restartButton = pygame.transform.scale(restartButton, (int(restartButton.get_width() * 0.5), int(restartButton.get_height() * 0.5)))
-        restartRect = restartButton.get_rect(center= (400,225))
+        # restartButton = pygame.image.load('Graphics_placeholder/button_pixelated.png').convert_alpha()
+        # restartButton = pygame.transform.scale(restartButton, (int(restartButton.get_width() * 0.5), int(restartButton.get_height() * 0.5)))
+        # restartRect = restartButton.get_rect(center= (400,225))
         gameOverScore = gameFont.render(f'Score: {score}', False, (64, 64, 64)).convert()
         gameOverSRect = gameOverScore.get_rect(center=(400,150))
         screen.fill((108, 198, 240))
+        gameActive = restartButton.draw(screen)
         screen.blit(GameOverText,gameOverRect)
         screen.blit(gameOverScore,gameOverSRect)
-        screen.blit(restartButton,restartRect)
+        # screen.blit(restartButton,restartRect)
         screen.blit(RestartText,RestartRect)
+        startTime = pygame.time.get_ticks()
+
 
 
     pygame.display.update()
