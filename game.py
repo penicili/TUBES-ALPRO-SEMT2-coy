@@ -11,7 +11,7 @@ class Player(pygame.sprite.Sprite):
         playerWalk2 = pygame.image.load('graphics/Player/player_walk_2.png').convert_alpha()
         self.playerWalk = [playerWalk1,playerWalk2]
         self.playerIndex = 0
-        self.playerJump = pygame.image.load('graphics/Player/jump.png').convert_alpha()
+        self.player  = pygame.image.load('graphics/Player/jump.png').convert_alpha()
 
         self.image = self.playerWalk[self.playerIndex]
         self.rect = self.image.get_rect(midbottom = (80,300))
@@ -187,18 +187,18 @@ bgm.play(loops= -1)
 GameOverText = gameFont.render('Game Over', False, (64,64,64)).convert()
 gameOverRect = GameOverText.get_rect(center = (400,50))
 
-RestartText = gameFont.render('Restart', False, (0,0,0)).convert()
-RestartText = pygame.transform.scale(RestartText, (int(RestartText.get_width())* 1.2, int(RestartText.get_height())* 1.2))
+RestartText = gameFont.render('Restart', False, (100,100,100)).convert()
+# RestartText = pygame.transform.scale(RestartText, (int(RestartText.get_width())* 1.2, int(RestartText.get_height())* 1.2))
 RestartRect = RestartText.get_rect(center=  (400,253))
 
 
 
 
 
-buttonimg = pygame.image.load('graphics/buttonimage.png').convert_alpha()
+buttonimg = pygame.image.load('graphics/buttoncoy.png').convert_alpha()
 # buttonimg = pygame.transform.scale(buttonimg, (int (buttonimg.get_width()* 5), int(buttonimg.get_height())* 5))
 # restartButtonRect = buttonimg.get_rect(center = (400, 255))
-restartButton = Button(400, 255, buttonimg, 5)
+restartButton = Button(400, 255, buttonimg, 3)
 startButton = Button (400, 255, buttonimg, 5)
 
 
@@ -227,9 +227,9 @@ while True:
 
         
 # Main menu
-    screen.blit(skySurface, (0,0))
-    if startButton:
-        gameActive = True
+    # screen.blit(skySurface, (0,0))
+    # if startButton:
+    #     gameActive = True
 
 
 # Game running State          
