@@ -3,10 +3,10 @@ from sys import exit
 from random import randint, choice
 import math
 
-# pygame.joystick.init()
-# joysticks = [pygame.joystick.Joystick(x) for x in range (pygame.joystick.get_count())]
-# print (joysticks)
-# joyStatus = False
+pygame.joystick.init()
+joysticks = [pygame.joystick.Joystick(x) for x in range (pygame.joystick.get_count())]
+
+joyStatus = False
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
@@ -28,11 +28,11 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_SPACE] and self.rect.bottom >= 300:
             self.gravity = -20
             self.jumpSound.play()
-        # if joyStatus == True:
-        #     aabs= pygame.joystick.Joystick(0).get_button(0)
-        #     if aabs and self.rect.bottom >= 300:
-        #         self.gravity = -20
-        #         self.jumpSound.play()
+        if joyStatus == True:
+            aabs= pygame.joystick.Joystick(0).get_button(0)
+            if aabs and self.rect.bottom >= 300:
+                self.gravity = -20
+                self.jumpSound.play()
         
 
     def applyGravity(self):
@@ -143,13 +143,10 @@ def collisionSprite():
     else: return True
 
 
-
-
 # Menginisiasi pygame 
 pygame.init()
 
     # Membuat window
-
 screen = pygame.display.set_mode((800,400))
 pygame.display.set_caption('Hell nah dude')
 
@@ -220,28 +217,11 @@ startButton = Button (400, 255, buttonimg, 5)
 
     # Timers
 obstacleTimer = pygame.USEREVENT + 1
-
-
 pygame.time.set_timer(obstacleTimer, 1400)
-# Main menu
-def mainMenu():
-    global skySurface,MountainSurface, groundSuface,citySurface, MountainWidth, bgWidth, cityWidth,tiles, tilesCity, tilesGround, scroll, groundScroll, cityScroll, score, bgm, GameOverText, gameOverRect, RestartText, RestartRect, buttonimg, restartButton, startButton, obstacleTimer, gameActive
-    while True:
-        screen.fill((0,0,0))
-        # Event handler
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                exit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    gameActive = True
-                    levelOne()
 
-def levelOne():
-#
-    global skySurface,MountainSurface, groundSuface,citySurface, MountainWidth, bgWidth, cityWidth,tiles, tilesCity, tilesGround, scroll, groundScroll, cityScroll, score, bgm, GameOverText, gameOverRect, RestartText, RestartRect, buttonimg, restartButton, startButton, obstacleTimer, gameActive
-    # Event loop
+# Game loop
+while True:
+# Event loop
     for event in pygame.event.get():
 
         if event.type == pygame.QUIT:
@@ -251,9 +231,9 @@ def levelOne():
         if gameActive:
             if event.type == obstacleTimer:               
                 obstacleGroup.add(Obstacle(choice(['fly','snail','snail','snail','snail'])))
-            # if event.type == pygame.JOYDEVICEADDED:
-            #     # joyStatus == True
-            #     clickSound.play()
+            if event.type == pygame.JOYDEVICEADDED:
+                joyStatus == True
+                clickSound.play()
 
 
 
@@ -261,13 +241,12 @@ def levelOne():
             if event.type == pygame.KEYDOWN and event.key == pygame.K_r:
                     clickSound.play()
                     gameActive = True
-                    global startTime
                     startTime = pygame.time.get_ticks()
-            # if joyStatus:
-            #     if pygame.joystick.Joystick(0).get_button(7):
-            #         clickSound.play()
-            #         gameActive = True
-            #         startTime = pygame.time.get_ticks()
+            if joyStatus:
+                if pygame.joystick.Joystick(0).get_button(7):
+                    clickSound.play()
+                    gameActive = True
+                    startTime = pygame.time.get_ticks()
 
         
 # Main menu
@@ -277,8 +256,8 @@ def levelOne():
 
 
 # Game running State          
+    screen.blit(skySurface,(0,0))
     if gameActive:
-        screen.blit(skySurface,(0,0))
         for i in range (0, tiles):
             screen.blit(MountainSurface, ((i * MountainWidth + scroll ), 130))
         for i in range (0, tiles):
@@ -324,7 +303,3 @@ def levelOne():
 
     pygame.display.update()
     clock.tick(60)
-
-# Game loop
-while True:
-    mainMenu()
