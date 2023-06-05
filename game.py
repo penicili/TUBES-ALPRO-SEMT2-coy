@@ -6,7 +6,7 @@ import math
 pygame.joystick.init()
 joysticks = [pygame.joystick.Joystick(x) for x in range (pygame.joystick.get_count())]
 
-
+joyStatus = False
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
@@ -25,11 +25,14 @@ class Player(pygame.sprite.Sprite):
 
     def playerInput(self):
         keys =pygame.key.get_pressed()
-        aabs = pygame.joystick.Joystick(0).get_button(0)
-        if keys[pygame.K_SPACE] and self.rect.bottom >= 300 or aabs and self.rect.bottom>= 300:
+        if keys[pygame.K_SPACE] and self.rect.bottom >= 300:
             self.gravity = -20
             self.jumpSound.play()
-
+        if joyStatus == True:
+            aabs= pygame.joystick.Joystick(0).get_button(0)
+            if aabs and self.rect.bottom >= 300:
+                self.gravity = -20
+                self.jumpSound.play()
         
 
     def applyGravity(self):
@@ -229,12 +232,18 @@ while True:
             if event.type == obstacleTimer:               
                 obstacleGroup.add(Obstacle(choice(['fly','snail','snail','snail','snail'])))
             if event.type == pygame.JOYDEVICEADDED:
+                joyStatus == True
                 clickSound.play()
 
 
 
         if not gameActive:
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_r or pygame.joystick.Joystick(0).get_button(7):
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_r:
+                    clickSound.play()
+                    gameActive = True
+                    startTime = pygame.time.get_ticks()
+            if joyStatus:
+                if pygame.joystick.Joystick(0).get_button(7):
                     clickSound.play()
                     gameActive = True
                     startTime = pygame.time.get_ticks()
