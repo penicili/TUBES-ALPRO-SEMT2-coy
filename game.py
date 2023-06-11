@@ -156,8 +156,8 @@ clock = pygame.time.Clock()
     # Membuat Font
 gameFont = pygame.font.Font('font/Pixeltype.ttf', 50)
 
-    # Game over state
-gameActive = True
+    # Game Status
+gameStatus = 'Menu'
 
     # Waktu utk score
 startTime = 0
@@ -179,6 +179,13 @@ MountainSurface = pygame.transform.scale(MountainSurface,(int(MountainSurface.ge
 groundSuface = pygame.image.load('Lv1_Graphics/ground.png').convert()
 citySurface = pygame.image.load('Lv1_Graphics/city_cut.png')
 citySurface = pygame.transform.scale(citySurface, (int(citySurface.get_width())*4, int(citySurface.get_height()*4))).convert_alpha()
+skyDay = pygame.image.load('graphics/Sky.png').convert()
+logo = pygame.image.load('graphics/still guy run.png').convert_alpha()
+logoRect = logo.get_rect(center= (400,120))
+
+
+
+
 
 MountainWidth = MountainSurface.get_width()
 bgWidth = groundSuface.get_width()
@@ -201,8 +208,11 @@ GameOverText = gameFont.render('Game Over', False, (64,64,64)).convert()
 gameOverRect = GameOverText.get_rect(center = (400,50))
 
 RestartText = gameFont.render('Restart', False, (100,100,100)).convert()
-# RestartText = pygame.transform.scale(RestartText, (int(RestartText.get_width())* 1.2, int(RestartText.get_height())* 1.2))
 RestartRect = RestartText.get_rect(center=  (400,253))
+startText = gameFont.render('Normal', False, (100,100,100)).convert()
+startRect = startText.get_rect(center=  (300,255))
+startText1 = gameFont.render('Normal +', False, (100,100,100)).convert()
+startRect1 = startText1.get_rect(center=  (500,255))
 
 
 
@@ -212,7 +222,8 @@ buttonimg = pygame.image.load('graphics/buttoncoy.png').convert_alpha()
 # buttonimg = pygame.transform.scale(buttonimg, (int (buttonimg.get_width()* 5), int(buttonimg.get_height())* 5))
 # restartButtonRect = buttonimg.get_rect(center = (400, 255))
 restartButton = Button(400, 255, buttonimg, 3)
-startButton = Button (400, 255, buttonimg, 5)
+startButton = Button (300, 255, buttonimg, 3)
+startButton2 = Button (500, 255, buttonimg, 3)
 
 
     # Timers
@@ -228,36 +239,50 @@ while True:
             # Close
             pygame.quit()
             exit()
-        if gameActive:
+
+
+        if gameStatus == 'Running':
             if event.type == obstacleTimer:               
                 obstacleGroup.add(Obstacle(choice(['fly','snail','snail','snail','snail'])))
             if event.type == pygame.JOYDEVICEADDED:
                 joyStatus == True
                 clickSound.play()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                gameStatus = 'Menu'
+                clickSound.play()
 
-
-
-        if not gameActive:
+        if gameStatus == 'Over':
             if event.type == pygame.KEYDOWN and event.key == pygame.K_r:
                     clickSound.play()
-                    gameActive = True
+                    gameStatus = "Running"
                     startTime = pygame.time.get_ticks()
             if joyStatus:
                 if pygame.joystick.Joystick(0).get_button(7):
                     clickSound.play()
-                    gameActive = True
+                    gameStatus = 'Running'
                     startTime = pygame.time.get_ticks()
 
         
-# Main menu
-    # screen.blit(skySurface, (0,0))
-    # if startButton:
-    #     gameActive = True
 
 
-# Game running State          
-    screen.blit(skySurface,(0,0))
-    if gameActive:
+# Game running State
+    if gameStatus != 'Running2':
+        screen.blit(skySurface,(0,0))
+        for i in range (0, tiles):
+            screen.blit(MountainSurface, ((i * MountainWidth + scroll ), 130))
+        for i in range (0, tiles):
+            screen.blit(citySurface,((i* cityWidth + cityScroll), 170))
+        for i in range (-1, 2):
+            screen.blit(groundSuface, ((i * bgWidth + groundScroll ), 300))
+        if abs(scroll) > MountainWidth:
+            scroll = 0
+        if abs(groundScroll) > bgWidth:
+            groundScroll = 0
+        if abs (cityScroll) >  cityWidth:
+            cityScroll = 0
+
+    if gameStatus == 'Running2':
+        screen.blit(skySurface,(0,0))
         for i in range (0, tiles):
             screen.blit(MountainSurface, ((i * MountainWidth + scroll ), 130))
         for i in range (0, tiles):
@@ -271,33 +296,49 @@ while True:
         if abs (cityScroll) >  cityWidth:
             cityScroll = 0
         
+        
 
     # scroll bg
-        scroll -= 1
-        groundScroll -= 6
-        cityScroll -= 4
-        # Score
+    scroll -= 1
+    groundScroll -= 6
+    cityScroll -= 4
+
+    # Player
+    player.draw(screen)
+    player.update()
+    if gameStatus == 'Menu':
+        screen.blit(logo,logoRect)
+        if startButton.draw(screen):
+            gameStatus = "Running"
+            startTime = pygame.time.get_ticks()  
+        if startButton2.draw(screen):
+            gameStatus = 'Running2' 
+        screen.blit(startText,startRect)
+        screen.blit(startText1,startRect1)
+        
+
+    if gameStatus == 'Running':
+    # Score
         score = displayScore()
-        # Player
-        player.draw(screen)
-        player.update()
         # Obstacle
         obstacleGroup.draw(screen)
         obstacleGroup.update()
 
         # Game over
-        gameActive = collisionSprite()
+        gameOver = not collisionSprite()
+        if gameOver:
+            gameStatus = 'Over'
 
 
 # Game over State
-    else:
+    if gameStatus == 'Over':
         gameOverScore = gameFont.render(f'Score: {score}', False, (64, 64, 64)).convert()
         gameOverSRect = gameOverScore.get_rect(center=(400,150))
         screen.fill((108, 198, 240))
         screen.blit(GameOverText,gameOverRect)
         screen.blit(gameOverScore,gameOverSRect)
         if restartButton.draw(screen):
-            gameActive = True
+            gameStatus = 'Running'
             startTime = pygame.time.get_ticks()
         screen.blit(RestartText,RestartRect)
 
