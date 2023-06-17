@@ -177,7 +177,7 @@ pygame.init()
 
     # Membuat window
 screen = pygame.display.set_mode((800,400))
-pygame.display.set_caption('Hell nah dude')
+pygame.display.set_caption('Still Guy Run')
 
     # Membuat objek clock untuk mengatur framerate
 clock = pygame.time.Clock()
@@ -389,7 +389,7 @@ while True:
         
         # Game over
         gameOver = not collisionSprite()
-        if score >= 100 and gameStatus == 'Running':
+        if score >= 10 and gameStatus == 'Running':
             gameStatus = 'Finished'
         if gameOver:
             gameStatus = 'Over'
